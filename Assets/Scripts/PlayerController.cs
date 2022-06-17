@@ -36,7 +36,8 @@ public class PlayerController : MonoBehaviourPunCallbacks
         GameManager.instance.players[id - 1] = this;
         
         
-        if (photonView.IsMine) {
+        if (photonView.IsMine && id == 1) {
+            GameManager.instance.GiveHat(id, true);
             // for now give the hat to 1st
         } else {
             rig.isKinematic = true;
@@ -54,6 +55,22 @@ public class PlayerController : MonoBehaviourPunCallbacks
         Ray ray = new Ray(transform.position, Vector3.down);
         if (Physics.Raycast(ray, 0.7f)) {
             rig.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+        }
+    }
+
+    public void setHat(bool toggle) {
+        hatObject.SetActive(toggle);
+    }
+
+    void OnCollisionEnter(Collision collision) {
+        if (!photonView.IsMine) return;
+
+        if (collision.gameObject.CompareTag("Player")) {
+            if (GameManager.instance.GetPlayer(collision.gameObject).id == GameManager.instance.playerWithHat) {
+                if (GameManager.instance.CanGetHat()) {
+                    GameManager.instance.photonView.RPC("GiveHat", RpcTarget.All, id, false);
+                }
+            }
         }
     }
 }

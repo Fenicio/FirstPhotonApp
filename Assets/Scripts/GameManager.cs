@@ -46,4 +46,25 @@ public class GameManager : MonoBehaviourPunCallbacks
         PlayerController playerScript = playerObj.GetComponent<PlayerController>();
         playerScript.photonView.RPC("Initialize", RpcTarget.All, PhotonNetwork.LocalPlayer);
     }
+
+    public PlayerController GetPlayer(int playerId) {
+        return players.First(x => x.id == playerId);
+    }
+
+    public PlayerController GetPlayer(GameObject playerObj) {
+        return players.First(x => x.gameObject == playerObj);
+    }
+
+    public void GiveHat(int playerId, bool initialGive) {
+        if (!initialGive) {
+            GetPlayer(playerWithHat).setHat(false);
+        }
+        playerWithHat = playerId;
+        GetPlayer(playerId);
+        hatPickupTime = Time.time;
+    }
+
+    public bool CanGetHat() {
+        return Time.time > hatPickupTime + invincibleDuration;
+    }
 }
