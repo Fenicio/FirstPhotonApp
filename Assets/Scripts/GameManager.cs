@@ -34,7 +34,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     }
 
     [PunRPC]
-    void ImInGame() {
+    public void ImInGame() {
         playersInGame++;
         if (playersInGame == PhotonNetwork.PlayerList.Length) {
             SpawnPlayer();
@@ -55,16 +55,31 @@ public class GameManager : MonoBehaviourPunCallbacks
         return players.First(x => x.gameObject == playerObj);
     }
 
+    [PunRPC]
     public void GiveHat(int playerId, bool initialGive) {
         if (!initialGive) {
             GetPlayer(playerWithHat).setHat(false);
         }
         playerWithHat = playerId;
-        GetPlayer(playerId);
+        PlayerController p = GetPlayer(playerId);
+        p.setHat(true);
         hatPickupTime = Time.time;
     }
 
     public bool CanGetHat() {
         return Time.time > hatPickupTime + invincibleDuration;
+    }
+
+    [PunRPC]
+    public void WinGame(int playerId) {
+        gameEnded = true;
+        PlayerController player = GetPlayer(playerId);
+        // Set winning scenario with player name
+        Invoke("GoBackToMenu", 3.0f); // 3 seconds
+    }
+
+    void GoBackToMenu() {
+        PhotonNetwork.LeaveRoom();
+        NetworkManager.instance.ChangeScene("Menu");
     }
 }

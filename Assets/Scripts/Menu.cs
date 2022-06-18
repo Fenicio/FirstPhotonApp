@@ -82,6 +82,12 @@ public class Menu : MonoBehaviourPunCallbacks
 
     [PunRPC]
     public void OnStartGameButton() {
+        if (!NetworkManager.instance) { 
+            Debug.Log("NetworkManager.instance is missing!");
+        }
+        if (!NetworkManager.instance.photonView) {
+            Debug.Log("NetworkManager.instance.photonView is missing!");
+        }
         NetworkManager.instance.photonView.RPC("ChangeScene", RpcTarget.All, "Game");
     }
 }
