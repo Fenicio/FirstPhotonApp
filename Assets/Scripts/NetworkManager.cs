@@ -9,7 +9,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     private void Awake() {
         if (instance != null && instance != this) {
-            gameObject.SetActive(false);
+            Destroy(gameObject);
         } else {
             instance = this;
             DontDestroyOnLoad(gameObject);

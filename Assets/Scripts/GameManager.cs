@@ -74,7 +74,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     public void WinGame(int playerId) {
         gameEnded = true;
         PlayerController player = GetPlayer(playerId);
-        // Set winning scenario with player name
+        GameUI.instance.SetWinText(player.photonPlayer.NickName);
         Invoke("GoBackToMenu", 3.0f); // 3 seconds
     }
 

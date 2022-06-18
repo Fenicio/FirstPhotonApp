@@ -87,6 +87,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
     }
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info) {
+        Debug.Log("OnPhotonSerializeView: " + (stream.IsWriting ? "W" : "") + (stream.IsReading ? "R" : ""));
         if (stream.IsWriting) {
             stream.SendNext(curHatTime);
         } else if (stream.IsReading) {
